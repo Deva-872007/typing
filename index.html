@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeFlow Academy - Master Touch Typing from Beginner to Advanced</title>
+  <meta name="description" content="Ultimate platform to test typing speed and learn touch typing from beginner to advanced with interactive guides, arcade games, and analytics." />
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/keyboard.css" />
+  <link rel="stylesheet" href="css/lessons.css" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body class="theme-dark">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">Type<span>Flow</span> Academy</div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs" aria-label="Main Navigation">
+        <button class="nav-tab-btn active" data-view="speed-test">
+          <span>⚡</span> Speed Test
+        </button>
+        <button class="nav-tab-btn" data-view="lessons">
+          <span>🎓</span> Learn & Lessons
+        </button>
+        <button class="nav-tab-btn" data-view="game">
+          <span>🎮</span> Arcade Game
+        </button>
+        <button class="nav-tab-btn" data-view="resources">
+          <span>📚</span> Resources & Guides
+        </button>
+        <button class="nav-tab-btn" data-view="stats">
+          <span>📊</span> Heatmap & Stats
+        </button>
+      </nav>
+
+      <!-- Customization Controls -->
+      <div class="header-actions">
+        <!-- Sound switch -->
+        <select id="sound-selector" class="select-control" title="Keyboard Sound Profile">
+          <option value="blue">🔊 Clicky (Blue)</option>
+          <option value="thocky">🔉 Thocky (Brown)</option>
+          <option value="soft">🔈 Soft Tactile</option>
+          <option value="off">🔇 Muted</option>
+        </select>
+
+        <!-- Theme selector -->
+        <select id="theme-selector" class="select-control" title="Color Theme">
+          <option value="dark">🌙 Modern Dark</option>
+          <option value="cyberpunk">⚡ Neon Cyber</option>
+          <option value="light">☀️ Clean Light</option>
+          <option value="retro">📟 Retro Amber</option>
+          <option value="forest">🌲 Forest Green</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="app-container">
+
+    <!-- ==================== VIEW 1: SPEED TEST ==================== -->
+    <section id="view-speed-test" class="view-section active">
+      <div class="speed-test-layout">
+        
+        <!-- Mode Toolbar -->
+        <div class="test-toolbar">
+          <div class="toolbar-group">
+            <button class="pill-btn mode-type-btn active" data-mode="time">⏱️ Time</button>
+            <button class="pill-btn mode-type-btn" data-mode="words">📝 Words</button>
+            <button class="pill-btn mode-type-btn" data-mode="quote">💬 Quotes</button>
+            <button class="pill-btn mode-type-btn" data-mode="code">💻 Code</button>
+            <button class="pill-btn mode-type-btn" data-mode="custom">✏️ Custom</button>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Time Sub-options -->
+          <div id="sub-config-time" class="toolbar-group">
+            <button class="pill-btn time-opt-btn" data-time="15">15s</button>
+            <button class="pill-btn time-opt-btn active" data-time="30">30s</button>
+            <button class="pill-btn time-opt-btn" data-time="60">60s</button>
+            <button class="pill-btn time-opt-btn" data-time="120">120s</button>
+          </div>
+
+          <!-- Words Sub-options -->
+          <div id="sub-config-words" class="toolbar-group" style="display: none;">
+            <button class="pill-btn words-opt-btn" data-words="10">10</button>
+            <button class="pill-btn words-opt-btn active" data-words="25">25</button>
+            <button class="pill-btn words-opt-btn" data-words="50">50</button>
+            <button class="pill-btn words-opt-btn" data-words="100">100</button>
+          </div>
+        </div>
+
+        <!-- Live Metrics HUD -->
+        <div class="live-hud">
+          <div class="hud-item">
+            <span class="hud-label">Speed</span>
+            <span id="live-wpm" class="hud-value">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">Accuracy</span>
+            <span id="live-acc" class="hud-value">100%</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">Time</span>
+            <span id="live-timer" class="hud-value">30s</span>
+          </div>
+        </div>
+
+        <!-- Typing Arena -->
+        <div class="typing-arena-card" id="arena-card">
+          <input type="text" id="typing-input" class="hidden-typing-input" autocomplete="off" autocapitalize="off" spellcheck="false" />
+          <div class="words-wrapper" id="words-display">
+            <!-- Rendered dynamically -->
+          </div>
+          <div class="typing-caret" id="typing-caret"></div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="test-bottom-actions">
+          <button id="btn-restart-test" class="btn btn-secondary">
+            <span>🔄</span> Restart Test <small>(Tab + Enter)</small>
+          </button>
+        </div>
+
+        <!-- Virtual Keyboard & Finger Guidance -->
+        <div class="keyboard-visualizer-container">
+          <div id="finger-guidance-badge" class="finger-guidance-badge">
+            <span class="finger-tag left-index">
+              <span class="finger-dot"></span>
+              Finger: <strong>Left Index</strong>
+            </span>
+            <span class="char-tag">Press: <strong>F</strong></span>
+          </div>
+
+          <!-- Virtual Keyboard Grid -->
+          <div id="virtual-keyboard"></div>
+
+          <!-- Interactive Hands Guide -->
+          <div id="hands-guide-visual" class="hands-guide-visual">
+            <div class="hand-box left-hand">
+              <div class="hand-finger pinky" data-finger="left-pinky" title="Left Pinky"></div>
+              <div class="hand-finger ring" data-finger="left-ring" title="Left Ring"></div>
+              <div class="hand-finger middle" data-finger="left-middle" title="Left Middle"></div>
+              <div class="hand-finger index" data-finger="left-index" title="Left Index"></div>
+              <div class="hand-finger thumb" data-finger="thumb" title="Left Thumb"></div>
+              <div class="hand-label">Left Hand</div>
+            </div>
+            <div class="hand-box right-hand">
+              <div class="hand-finger thumb" data-finger="thumb" title="Right Thumb"></div>
+              <div class="hand-finger index" data-finger="right-index" title="Right Index"></div>
+              <div class="hand-finger middle" data-finger="right-middle" title="Right Middle"></div>
+              <div class="hand-finger ring" data-finger="right-ring" title="Right Ring"></div>
+              <div class="hand-finger pinky" data-finger="right-pinky" title="Right Pinky"></div>
+              <div class="hand-label">Right Hand</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: LESSONS & ACADEMY ==================== -->
+    <section id="view-lessons" class="view-section">
+      <div class="academy-hero">
+        <div class="academy-hero-top">
+          <div>
+            <h1 class="academy-title">Touch Typing Curriculum</h1>
+            <p class="academy-desc">20 structured lessons from zero-experience home row to advanced programming syntax and grandmaster speed.</p>
+          </div>
+        </div>
+        <div class="academy-progress-wrapper">
+          <div class="academy-progress-info">
+            <span id="academy-progress-text">1 of 20 Lessons Completed (5%)</span>
+            <span>Pass lessons with ≥90% accuracy to unlock next stage</span>
+          </div>
+          <div class="progress-track">
+            <div id="academy-progress-bar" class="progress-bar-fill" style="width: 5%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage Filters -->
+      <div class="stage-filters">
+        <button class="stage-filter-btn active" data-stage="all">All Lessons (1-20)</button>
+        <button class="stage-filter-btn" data-stage="beginner">Stage 1: Beginner Foundations</button>
+        <button class="stage-filter-btn" data-stage="intermediate">Stage 2: Intermediate Flow & Speed</button>
+        <button class="stage-filter-btn" data-stage="advanced">Stage 3: Advanced & Mastery</button>
+      </div>
+
+      <!-- Lessons Grid -->
+      <div id="lessons-grid" class="lessons-grid">
+        <!-- Rendered by lessons-engine.js -->
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: ARCADE GAME ==================== -->
+    <section id="view-game" class="view-section">
+      <div class="game-layout">
+        <div class="game-arena-card">
+          <!-- Game HUD -->
+          <div class="game-hud">
+            <div class="hud-group">
+              <div class="game-hud-item">
+                <span class="game-hud-label">Score:</span>
+                <span id="game-score" class="game-hud-val">0</span>
+              </div>
+              <div class="game-hud-item">
+                <span class="game-hud-label">Streak:</span>
+                <span id="game-streak" class="game-hud-val">x0</span>
+              </div>
+              <div class="game-hud-item">
+                <span class="game-hud-label">Level:</span>
+                <span id="game-level" class="game-hud-val">1</span>
+              </div>
+            </div>
+            <div class="hud-group">
+              <div class="game-hud-item">
+                <span class="game-hud-label">High:</span>
+                <span id="game-highscore" class="game-hud-val">0</span>
+              </div>
+              <div class="game-hud-item">
+                <span class="game-hud-label">Lives:</span>
+                <span id="game-lives" class="game-lives-val">❤️❤️❤️</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas -->
+          <div class="canvas-wrapper">
+            <canvas id="game-canvas"></canvas>
+
+            <!-- Start Overlay -->
+            <div id="game-start-overlay" class="game-overlay">
+              <h2 class="overlay-title">Word Fall Arcade</h2>
+              <p class="overlay-subtitle">Type the falling words before they hit the red danger line. Build combo streaks to unlock score multipliers and advance through levels!</p>
+              <button id="game-start-btn" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 28px;">
+                ▶ Start Playing
+              </button>
+            </div>
+
+            <!-- Game Over Overlay -->
+            <div id="game-over-overlay" class="game-overlay" style="display: none;">
+              <h2 class="overlay-title" style="color: var(--error);">Game Over!</h2>
+              <p class="overlay-subtitle">Great effort! Every game strengthens your muscle memory and reflex speed.</p>
+              <div class="overlay-stats-row">
+                <div class="overlay-stat-item">
+                  <div id="final-game-score" class="overlay-stat-num">0</div>
+                  <div class="overlay-stat-lbl">Final Score</div>
+                </div>
+                <div class="overlay-stat-item">
+                  <div id="final-game-words" class="overlay-stat-num">0</div>
+                  <div class="overlay-stat-lbl">Words Cleared</div>
+                </div>
+              </div>
+              <button id="game-restart-btn" class="btn btn-primary" style="margin-top: 10px;">
+                🔄 Play Again
+              </button>
+            </div>
+          </div>
+
+          <!-- Game Input Field -->
+          <div class="game-bottom-bar">
+            <input type="text" id="game-input" class="game-input-field" placeholder="Type here..." autocomplete="off" autocapitalize="off" spellcheck="false" disabled />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: RESOURCES & GUIDES ==================== -->
+    <section id="view-resources" class="view-section">
+      <div class="resources-hero">
+        <h1 class="hero-title">Touch Typing Knowledge Hub</h1>
+        <p class="hero-subtitle">Comprehensive guides, ergonomic safety, plateau-breaking tactics, and terminology to make your learning effortless.</p>
+      </div>
+
+      <!-- Section: Ergonomics & Posture -->
+      <div class="resource-section">
+        <h2 class="section-title"><span>🧘</span> Healthy Posture & Ergonomics</h2>
+        <div id="posture-cards-container" class="resource-grid"></div>
+      </div>
+
+      <!-- Section: Golden Rules -->
+      <div class="resource-section">
+        <h2 class="section-title"><span>⭐</span> The 7 Golden Rules of Touch Typing</h2>
+        <div id="golden-rules-container" class="rules-grid"></div>
+      </div>
+
+      <!-- Section: Plateau Breakers -->
+      <div class="resource-section">
+        <h2 class="section-title"><span>🚀</span> How to Break Speed Plateaus</h2>
+        <div id="plateau-cards-container" class="plateau-grid"></div>
+      </div>
+
+      <!-- Section: Glossary -->
+      <div class="resource-section">
+        <h2 class="section-title"><span>📖</span> Touch Typing Glossary</h2>
+        <div id="glossary-container" class="glossary-grid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 5: STATS & HEATMAP ==================== -->
+    <section id="view-stats" class="view-section">
+      <!-- Overview Grid -->
+      <div class="stats-overview-grid">
+        <div class="overview-card">
+          <div id="stats-best-wpm" class="overview-val">0</div>
+          <div class="overview-lbl">Best WPM</div>
+        </div>
+        <div class="overview-card">
+          <div id="stats-avg-wpm" class="overview-val">0</div>
+          <div class="overview-lbl">Average WPM</div>
+        </div>
+        <div class="overview-card">
+          <div id="stats-avg-acc" class="overview-val">0%</div>
+          <div class="overview-lbl">Avg Accuracy</div>
+        </div>
+        <div class="overview-card">
+          <div id="stats-tests-count" class="overview-val">0</div>
+          <div class="overview-lbl">Tests Taken</div>
+        </div>
+        <div class="overview-card">
+          <div id="stats-words-count" class="overview-val">0</div>
+          <div class="overview-lbl">Words Typed</div>
+        </div>
+        <div class="overview-card">
+          <div id="stats-time-spent" class="overview-val">0m 0s</div>
+          <div class="overview-lbl">Practice Time</div>
+        </div>
+      </div>
+
+      <!-- WPM Progression Chart -->
+      <div class="stats-card">
+        <h3 class="stats-card-title">📈 WPM Progression History</h3>
+        <canvas id="stats-chart-canvas"></canvas>
+      </div>
+
+      <!-- Heatmap / Weak Keys Analysis -->
+      <div class="stats-card">
+        <h3 class="stats-card-title">🎯 Weak Keys Analysis (Keys with Most Mistakes)</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+          Focus your practice on these keys to immediately raise your net typing speed.
+        </p>
+        <div id="heatmap-weak-keys" class="heatmap-weak-keys">
+          <!-- Rendered by stats-tracker.js -->
+        </div>
+      </div>
+
+      <!-- Recent History Table -->
+      <div class="stats-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 class="stats-card-title" style="margin-bottom: 0;">📜 Recent Tests</h3>
+          <button id="btn-reset-stats" class="btn btn-ghost" style="color: var(--error); font-size: 0.85rem;">
+            Reset Stats
+          </button>
+        </div>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Mode</th>
+              <th>WPM</th>
+              <th>Accuracy</th>
+              <th>Consistency</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Modal 1: Speed Test Results Modal -->
+  <div id="test-result-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Test Complete! 🎉</h3>
+        <button id="modal-close-btn" class="close-modal-btn">&times;</button>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-stat-card featured">
+          <div>
+            <div id="res-wpm" class="stat-num">0</div>
+            <div class="stat-lbl">Net WPM</div>
+          </div>
+          <div>
+            <div id="res-acc" class="stat-num">0%</div>
+            <div class="stat-lbl">Accuracy</div>
+          </div>
+        </div>
+
+        <div class="result-stat-card">
+          <div id="res-raw-wpm" class="stat-num" style="font-size: 1.5rem;">0</div>
+          <div class="stat-lbl">Raw WPM</div>
+        </div>
+        <div class="result-stat-card">
+          <div id="res-cpm" class="stat-num" style="font-size: 1.5rem;">0</div>
+          <div class="stat-lbl">CPM</div>
+        </div>
+        <div class="result-stat-card">
+          <div id="res-consistency" class="stat-num" style="font-size: 1.5rem;">0%</div>
+          <div class="stat-lbl">Consistency</div>
+        </div>
+        <div class="result-stat-card">
+          <div id="res-time" class="stat-num" style="font-size: 1.5rem;">0s</div>
+          <div class="stat-lbl">Time</div>
+        </div>
+        <div class="result-stat-card">
+          <div id="res-errors" class="stat-num" style="font-size: 1.5rem; color: var(--error);">0</div>
+          <div class="stat-lbl">Errors</div>
+        </div>
+      </div>
+
+      <div class="results-chart-box">
+        <div class="chart-title">WPM Timeline (Per Second)</div>
+        <canvas id="result-chart-canvas"></canvas>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button id="modal-restart-btn" class="btn btn-primary">
+          <span>🔄</span> Next Test
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Interactive Lesson Tutor Modal -->
+  <div id="lesson-tutor-modal" class="modal-backdrop">
+    <div class="tutor-modal-box">
+      <input type="text" id="tutor-hidden-input" class="hidden-typing-input" autocomplete="off" autocapitalize="off" spellcheck="false" />
+      
+      <div class="tutor-header">
+        <div class="tutor-info">
+          <h2 id="tutor-lesson-title">Lesson 1: Home Row Anchors</h2>
+          <p id="tutor-lesson-guide" class="tutor-guide-text">Left Index: F | Right Index: J</p>
+        </div>
+        <button id="close-tutor-btn" class="close-modal-btn">&times;</button>
+      </div>
+
+      <div class="tutor-steps-wrap">
+        <div id="tutor-exercise-steps" class="step-dots"></div>
+        <div class="tutor-live-stats">
+          <div>Speed: <span id="tutor-live-wpm">0 WPM</span></div>
+          <div>Accuracy: <span id="tutor-live-acc">100%</span></div>
+        </div>
+      </div>
+
+      <div id="tutor-words-display" class="tutor-words-display"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.85rem;">
+        <div>Target: <strong id="tutor-target-wpm">15 WPM</strong> | Min Accuracy: <strong id="tutor-target-acc">90%</strong></div>
+        <div>💡 Tip: Keep wrists floating and eyes on the screen.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Lesson Result Modal -->
+  <div id="lesson-result-modal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 500px; text-align: center;">
+      <div id="result-stars" class="result-stars-box"></div>
+      <h3 id="result-lesson-title" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;"></h3>
+      <p id="result-feedback" class="result-feedback-text"></p>
+
+      <div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 1.5rem;">
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Speed Achieved</div>
+          <strong id="result-wpm-stat" style="font-size: 1.2rem; color: var(--primary);"></strong>
+        </div>
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Accuracy Achieved</div>
+          <strong id="result-acc-stat" style="font-size: 1.2rem; color: var(--success);"></strong>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 12px;">
+        <button id="result-retry-btn" class="btn btn-secondary">🔄 Try Again</button>
+        <button id="result-next-btn" class="btn btn-primary">Next Lesson ➔</button>
+        <button id="result-back-btn" class="btn btn-ghost">All Lessons</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Custom Text Modal -->
+  <div id="custom-text-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Custom Practice Text</h3>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
+        Paste or type any custom text, article paragraph, or code snippet you want to practice with.
+      </p>
+      <textarea id="custom-text-input" class="custom-textarea" placeholder="Paste custom practice text here..."></textarea>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button id="cancel-custom-text-btn" class="btn btn-secondary">Cancel</button>
+        <button id="apply-custom-text-btn" class="btn btn-primary">Start Practice</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>TypeFlow Academy &bull; Complete Touch Typing Platform &bull; Made with &hearts; for effortless learning</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/sound.js"></script>
+  <script src="js/keyboard-visualizer.js"></script>
+  <script src="js/typing-engine.js"></script>
+  <script src="js/lessons-data.js"></script>
+  <script src="js/lessons-engine.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/resources-data.js"></script>
+  <script src="js/stats-tracker.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
