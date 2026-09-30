@@ -1,0 +1,272 @@
+/* ==========================================================================
+   INTERACTIVE KEYBOARD & FINGER VISUALIZER STYLES
+   ========================================================================== */
+
+.keyboard-visualizer-container {
+  width: 100%;
+  max-width: 960px;
+  margin: 1.5rem auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Finger guidance active banner */
+.finger-guidance-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
+  min-height: 42px;
+}
+
+.finger-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.finger-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.char-tag {
+  background: var(--bg-tertiary);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+}
+
+/* The Keyboard Board */
+.kb-board {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.kb-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+/* Individual Keys */
+.kb-key {
+  height: 48px;
+  min-width: 44px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  position: relative;
+  user-select: none;
+  transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.key-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.key-main {
+  line-height: 1.1;
+}
+
+/* Key Widths */
+.key-backspace { min-width: 82px; flex-grow: 1; }
+.key-tab { min-width: 64px; }
+.key-backslash { min-width: 58px; flex-grow: 1; }
+.key-caps { min-width: 76px; }
+.key-enter { min-width: 90px; flex-grow: 1; }
+.key-lshift { min-width: 100px; flex-grow: 1; }
+.key-rshift { min-width: 110px; flex-grow: 1; }
+.key-space { min-width: 280px; flex-grow: 3; }
+.key-mod { min-width: 55px; }
+
+/* Homing Keys: F & J tactile bar */
+.homing-key::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  width: 14px;
+  height: 2.5px;
+  background: var(--text-muted);
+  border-radius: 2px;
+}
+
+/* Color-Coded Finger Zones (Border / Subtle indicator) */
+.kb-key.finger-left-pinky,
+.kb-key.finger-right-pinky {
+  border-bottom: 2.5px solid #a855f7;
+}
+
+.kb-key.finger-left-ring,
+.kb-key.finger-right-ring {
+  border-bottom: 2.5px solid #3b82f6;
+}
+
+.kb-key.finger-left-middle,
+.kb-key.finger-right-middle {
+  border-bottom: 2.5px solid #06b6d4;
+}
+
+.kb-key.finger-left-index,
+.kb-key.finger-right-index {
+  border-bottom: 2.5px solid #10b981;
+}
+
+.kb-key.finger-thumb {
+  border-bottom: 2.5px solid #f59e0b;
+}
+
+/* Finger Dot Colors */
+.finger-left-pinky .finger-dot,
+.finger-right-pinky .finger-dot { color: #a855f7; }
+.finger-left-ring .finger-dot,
+.finger-right-ring .finger-dot { color: #3b82f6; }
+.finger-left-middle .finger-dot,
+.finger-right-middle .finger-dot { color: #06b6d4; }
+.finger-left-index .finger-dot,
+.finger-right-index .finger-dot { color: #10b981; }
+.finger-thumb .finger-dot { color: #f59e0b; }
+
+/* Active Key Press */
+.kb-key.key-pressed {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  background: var(--bg-elevated);
+}
+
+/* Key Target Highlight (Next Key to Strike) */
+.kb-key.key-target {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px var(--primary), 0 4px 0 rgba(0, 0, 0, 0.4);
+  animation: keyGlowPulse 1.2s infinite alternate;
+}
+
+.kb-key.key-target .key-sub,
+.kb-key.key-target .key-main {
+  color: #ffffff !important;
+}
+
+.kb-key.key-target-shift {
+  background: var(--accent) !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 12px var(--accent);
+}
+
+@keyframes keyGlowPulse {
+  0% { transform: translateY(-2px) scale(1); }
+  100% { transform: translateY(-2px) scale(1.04); }
+}
+
+/* Legend */
+.kb-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legend-dot.finger-left-pinky { background: #a855f7; }
+.legend-dot.finger-left-ring { background: #3b82f6; }
+.legend-dot.finger-left-middle { background: #06b6d4; }
+.legend-dot.finger-left-index { background: #10b981; }
+.legend-dot.finger-thumb { background: #f59e0b; }
+
+/* Hands Visualizer Diagram */
+.hands-guide-visual {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  margin-top: 10px;
+}
+
+.hand-box {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+}
+
+.hand-finger {
+  width: 14px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.hand-finger.pinky { height: 35px; }
+.hand-finger.ring { height: 50px; }
+.hand-finger.middle { height: 58px; }
+.hand-finger.index { height: 52px; }
+.hand-finger.thumb { height: 26px; }
+
+.hand-finger.active-finger {
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+  transform: translateY(-4px);
+}
+
+.hand-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* Mobile responsive keyboard */
+@media (max-width: 768px) {
+  .kb-board {
+    display: none; /* Auto hide on very small mobile screens */
+  }
+}
